@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 from typing import List
 
 def get_running_path():
@@ -9,6 +10,8 @@ def get_running_path():
     path = "\\".join(path)
     return path
 
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
 
 # step one, check if venv exists
 def is_venv(venv_path:str)->bool:
@@ -18,7 +21,7 @@ def is_venv(venv_path:str)->bool:
 def is_requirements(requirements_path:str)->bool:
 
     try:
-        with open(requirements_path) as file:
+        with open(requirements_path,"r") as file:
             pass
     except FileNotFoundError as FNFE:
         print()
