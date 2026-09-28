@@ -20,6 +20,8 @@ def is_venv(venv_path:str)->bool:
 # step two, check if libs are installed
 def is_requirements(requirements_path:str)->bool:
 
+    requirements = []
+
     try:
         with open(requirements_path,"r") as file:
             pass
@@ -30,12 +32,12 @@ def is_requirements(requirements_path:str)->bool:
     print(f"fffff {l.stdout}")
 
 
-def venv(venv_name:str,args: List[str] = []) -> None:
+def venv(venv_name:str,args: List[str] = [], requirements_path:str = "requirements.txt") -> None:
     #Note for developers: venv_name is going to be the relative directory to your running python script. 
         # For example passing "venv" as the venv_name param will make a folder called venv in the same directory as your python script
 
     if is_venv(venv_name):
-        pass
+        is_requirements()
     else:
 
         venv_call = ["python","-m","venv",venv_name]
