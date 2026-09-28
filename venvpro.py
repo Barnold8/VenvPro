@@ -9,9 +9,22 @@ def get_running_path():
     path = "\\".join(path)
     return path
 
+
 # step one, check if venv exists
 def is_venv(venv_path:str)->bool:
     return os.path.exists(get_running_path()+f"\\{venv_path}")
+
+# step two, check if libs are installed
+def is_requirements(requirements_path:str)->bool:
+
+    try:
+        with open(requirements_path) as file:
+            pass
+    except FileNotFoundError as FNFE:
+        print()
+
+    l = subprocess.run(["pip ","list"],encoding="utf-8",capture_output=True)
+    print(f"fffff {l.stdout}")
 
 
 def venv(venv_name:str,args: List[str] = []) -> None:
