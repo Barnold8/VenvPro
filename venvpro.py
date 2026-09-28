@@ -13,6 +13,10 @@ def get_running_path():
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
+def parse_packages(packages:str)->None:
+
+    pass
+
 # step one, check if venv exists
 def is_venv(venv_path:str)->bool:
     return os.path.exists(get_running_path()+f"\\{venv_path}")
@@ -24,9 +28,18 @@ def is_requirements(requirements_path:str)->bool:
 
     try:
         with open(requirements_path,"r") as file:
-            pass
+            
+            lines = file.readlines()
+            for line in lines:
+                if "=" in line:
+                    l = line.split("=")[0]
+                    requirements.append(l)
+                else:
+                    requirements.append(line)
+
     except FileNotFoundError as FNFE:
-        print()
+        eprint(f"Error: could not find requirements file at path \"{requirements_path}\"")
+        exit(-1)
 
     l = subprocess.run(["pip ","list"],encoding="utf-8",capture_output=True)
     print(f"fffff {l.stdout}")
