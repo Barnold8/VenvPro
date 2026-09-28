@@ -32,15 +32,13 @@ def is_requirements(requirements_path:str)->bool:
     print(f"fffff {l.stdout}")
 
 
-def venv(venv_name:str,args: List[str] = [], requirements_path:str = "requirements.txt") -> None:
-    #Note for developers: venv_name is going to be the relative directory to your running python script. 
-        # For example passing "venv" as the venv_name param will make a folder called venv in the same directory as your python script
+def venv(venv_path:str,args: List[str] = [], requirements_path:str = "requirements.txt") -> None:
 
-    if is_venv(venv_name):
-        is_requirements()
+    if is_venv(venv_path):
+        is_requirements(requirements_path)
     else:
 
-        venv_call = ["python","-m","venv",venv_name]
+        venv_call = ["python","-m","venv",venv_path]
         venv_call = venv_call + args
 
         subprocess.run(venv_call)
