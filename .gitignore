@@ -2,4 +2,4 @@ main.py
 venv
 *__pycache__*
 *requirements.txt*
-venvtest.py
+venv_test.py
