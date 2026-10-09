@@ -10,13 +10,13 @@ def enter_venv(venv_path:str,py_file:str) -> None:
         print("Error while starting VENV. Possible cause is venv doesnt exist or path to venv is wrong. Less possible cause is main file doesnt exist or path to main file is wrong")
         exit(-1)
 
-def eprint(*args, **kwargs):
+def eprint(*args, **kwargs)-> None:
     print(*args, file=sys.stderr, **kwargs)
 
 def parse_packages(packages:str)->None:
     return [x.split(" ")[0] for x in packages.stdout.split("\n")[2:]]
 
-def get_running_path():
+def get_running_path() -> str:
     path = os.path.abspath(__file__)
     path = path.split("\\")
     path = path[:-1]
@@ -53,7 +53,7 @@ def is_requirements(requirements_path:str,venv_path:str)->bool:
 
     requirements = get_requirements(requirements_path)    
     
-    packages = parse_packages(subprocess.run(["pip ","list"],encoding="utf-8",capture_output=True))
+    packages = parse_packages(subprocess.run([f"{venv_path}/bin/pip","list"],encoding="utf-8",capture_output=True))
     packages = clean_array(packages)
     requirements = clean_array(requirements)
 
@@ -69,18 +69,17 @@ def is_requirements(requirements_path:str,venv_path:str)->bool:
 def clean_array(arr:List[str])-> List[str]:
     return [(x.strip()).lower() for x in arr]
 
-def install_requirements():
-    subprocess.run("pip install -r requirements.txt".split(" "))
+def install_requirements(venv_path:str,requirements:str)-> None:
+    subprocess.run(f"{venv_path}/bin/pip install -r {requirements}".split(" "))
 
 def venv(venv_path:str,args: List[str] = [], requirements_path:str = "requirements.txt") -> None:
 
     if is_venv(venv_path):
-        print("IN VENV")
-        if is_requirements(requirements_path):
-            print("REQUIREMENTS")
+        if is_requirements(requirements_path,venv_path):
+            print("Project finished setting up")
         else:
-            install_requirements()
-            print("INSTALL REQUIREMENTS")
+            install_requirements(venv_path,requirements_path)
+            print("Project finished setting up")
     else:
         venv_call = ["python","-m","venv",venv_path]
         venv_call = venv_call + args
@@ -88,8 +87,3 @@ def venv(venv_path:str,args: List[str] = [], requirements_path:str = "requiremen
         subprocess.run(venv_call)   
     
         enter_venv(venv_path,get_running_file())
-        
-        print(get_running_file())
-
-
-
