@@ -45,14 +45,17 @@ def get_requirements(requirements_path:str)-> List[str]:
 
     return requirements
 
+def clean_array(arr:List[str])-> List[str]:
+    return [(x.strip()).lower() for x in arr]
+
 # step two, check if libs are installed
 def is_requirements(requirements_path:str,venv_path:str)->bool:
 
     requirements = get_requirements(requirements_path)    
     
     packages = parse_packages(subprocess.run(["pip ","list"],encoding="utf-8",capture_output=True))
-    packages = [(x.strip()).lower()for x in packages]
-    requirements = [(x.strip()).lower() for x in requirements]
+    packages = clean_array(packages)
+    requirements = clean_array(requirements)
 
     for requirement in requirements:
         if requirement not in packages:
