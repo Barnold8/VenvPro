@@ -3,3 +3,4 @@ venv
 *__pycache__*
 *requirements.txt*
 venv_test.py
+reset.py
