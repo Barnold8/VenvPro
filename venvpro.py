@@ -59,10 +59,7 @@ def is_requirements(requirements_path:str,venv_path:str)->bool:
 
     for requirement in requirements:
         if requirement not in packages:
-            print(f"Warning: module {requirement.strip("\n")} not installed") 
-            print(f"lines: {requirements}\n{"="*128}\npackages: {packages}")
-            print(len(requirements),len(packages))
-            
+            print(f"Warning: module {requirement.strip("\n")} not installed")             
             return False
     return True
 
