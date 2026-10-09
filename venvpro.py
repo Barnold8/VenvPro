@@ -10,6 +10,11 @@ def get_running_path():
     path = "\\".join(path)
     return path
 
+def enter_venv(venv_path:str,py_file:str) -> None:
+    #INCOMPLETE FUNCTION, TESTING NOT FINISHED 
+        #Todo, execute this function from within a main file without recursive loop
+    subprocess.Popen([f"{venv_path}/bin/python", py_file])
+
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
@@ -83,7 +88,3 @@ def venv(venv_path:str,args: List[str] = [], requirements_path:str = "requiremen
 
 
 
-def enter_venv(venv_path:str,py_file:str) -> None:
-    #INCOMPLETE FUNCTION, TESTING NOT FINISHED 
-        #Todo, execute this function from within a main file without recursive loop
-    subprocess.Popen([f"{venv_path}/bin/python", py_file])
