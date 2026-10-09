@@ -3,13 +3,6 @@ import subprocess
 import sys
 from typing import List
 
-def get_running_path():
-    path = os.path.abspath(__file__)
-    path = path.split("\\")
-    path = path[:-1]
-    path = "\\".join(path)
-    return path
-
 def enter_venv(venv_path:str,py_file:str) -> None:
     try:
         subprocess.Popen([f"{venv_path}/bin/python", py_file])
@@ -23,8 +16,15 @@ def eprint(*args, **kwargs):
 def parse_packages(packages:str)->None:
     return [x.split(" ")[0] for x in packages.stdout.split("\n")[2:]]
 
-def is_venv(venv_path:str)->bool:
-    return os.path.exists(get_running_path()+f"\\{venv_path}")
+def get_running_path():
+    path = os.path.abspath(__file__)
+    path = path.split("\\")
+    path = path[:-1]
+    path = "\\".join(path)
+    return path
+
+def get_running_file() -> str:
+    return sys.argv[0]
 
 def get_requirements(requirements_path:str)-> List[str]:
     requirements = []
@@ -46,10 +46,9 @@ def get_requirements(requirements_path:str)-> List[str]:
 
     return requirements
 
-def clean_array(arr:List[str])-> List[str]:
-    return [(x.strip()).lower() for x in arr]
+def is_venv(venv_path:str)->bool:
+    return os.path.exists(get_running_path()+f"\\{venv_path}")
 
-# step two, check if libs are installed
 def is_requirements(requirements_path:str,venv_path:str)->bool:
 
     requirements = get_requirements(requirements_path)    
@@ -67,12 +66,11 @@ def is_requirements(requirements_path:str,venv_path:str)->bool:
             return False
     return True
 
+def clean_array(arr:List[str])-> List[str]:
+    return [(x.strip()).lower() for x in arr]
+
 def install_requirements():
     subprocess.run("pip install -r requirements.txt".split(" "))
-
-
-def get_running_file() -> str:
-    return sys.argv[0]
 
 def venv(venv_path:str,args: List[str] = [], requirements_path:str = "requirements.txt") -> None:
 
