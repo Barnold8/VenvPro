@@ -21,15 +21,11 @@ def eprint(*args, **kwargs):
 def parse_packages(packages:str)->None:
     return [x.split(" ")[0] for x in packages.stdout.split("\n")[2:]]
 
-
-
 # step one, check if venv exists
 def is_venv(venv_path:str)->bool:
     return os.path.exists(get_running_path()+f"\\{venv_path}")
 
-# step two, check if libs are installed
-def is_requirements(requirements_path:str)->bool:
-
+def get_requirements(requirements_path:str)-> List[str]:
     requirements = []
 
     try:
@@ -46,6 +42,13 @@ def is_requirements(requirements_path:str)->bool:
     except FileNotFoundError as FNFE:
         eprint(f"Error: could not find requirements file at path \"{requirements_path}\"")
         exit(-1)
+
+    return requirements
+
+# step two, check if libs are installed
+def is_requirements(requirements_path:str,venv_path:str)->bool:
+
+    requirements = get_requirements(requirements_path)    
     
     packages = parse_packages(subprocess.run(["pip ","list"],encoding="utf-8",capture_output=True))
     packages = [(x.strip()).lower()for x in packages]
