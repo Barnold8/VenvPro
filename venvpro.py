@@ -11,9 +11,11 @@ def get_running_path():
     return path
 
 def enter_venv(venv_path:str,py_file:str) -> None:
-    #INCOMPLETE FUNCTION, TESTING NOT FINISHED 
-        #Todo, execute this function from within a main file without recursive loop
-    subprocess.Popen([f"{venv_path}/bin/python", py_file])
+    try:
+        subprocess.Popen([f"{venv_path}/bin/python", py_file])
+    except FileNotFoundError as FNFE:
+        print("Error while starting VENV. Possible cause is venv doesnt exist or path to venv is wrong. Less possible cause is main file doesnt exist or path to main file is wrong")
+        exit(-1)
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -21,7 +23,6 @@ def eprint(*args, **kwargs):
 def parse_packages(packages:str)->None:
     return [x.split(" ")[0] for x in packages.stdout.split("\n")[2:]]
 
-# step one, check if venv exists
 def is_venv(venv_path:str)->bool:
     return os.path.exists(get_running_path()+f"\\{venv_path}")
 
