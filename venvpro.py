@@ -47,7 +47,7 @@ def get_requirements(requirements_path:str)-> List[str]:
     return requirements
 
 def is_venv(venv_path:str)->bool:
-    return os.path.exists(get_running_path()+f"\\{venv_path}")
+    return sys.prefix != sys.base_prefix
 
 def is_requirements(requirements_path:str,venv_path:str)->bool:
 
