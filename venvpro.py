@@ -14,8 +14,9 @@ def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 def parse_packages(packages:str)->None:
+    return [x.split(" ")[0] for x in packages.stdout.split("\n")[2:]]
 
-    pass
+
 
 # step one, check if venv exists
 def is_venv(venv_path:str)->bool:
@@ -33,28 +34,56 @@ def is_requirements(requirements_path:str)->bool:
             for line in lines:
                 if "=" in line:
                     l = line.split("=")[0]
-                    requirements.append(l)
+                    requirements.append(l.lower())
                 else:
-                    requirements.append(line)
-
+                    requirements.append(line.lower())
+        
     except FileNotFoundError as FNFE:
         eprint(f"Error: could not find requirements file at path \"{requirements_path}\"")
         exit(-1)
+    
+    packages = parse_packages(subprocess.run(["pip ","list"],encoding="utf-8",capture_output=True))
+    packages = [(x.strip()).lower()for x in packages]
+    requirements = [(x.strip()).lower() for x in requirements]
 
-    l = subprocess.run(["pip ","list"],encoding="utf-8",capture_output=True)
-    print(f"fffff {l.stdout}")
+    for requirement in requirements:
+        if requirement not in packages:
+            print(f"Warning: module {requirement.strip("\n")} not installed") 
+            print(f"lines: {requirements}\n{"="*128}\npackages: {packages}")
+            print(len(requirements),len(packages))
+            
+            return False
+    return True
 
+def install_requirements():
+    subprocess.run("pip install -r requirements.txt".split(" "))
+
+
+def get_running_file() -> str:
+    return sys.argv[0]
 
 def venv(venv_path:str,args: List[str] = [], requirements_path:str = "requirements.txt") -> None:
 
     if is_venv(venv_path):
-        is_requirements(requirements_path)
+        print("IN VENV")
+        if is_requirements(requirements_path):
+            print("REQUIREMENTS")
+        else:
+            install_requirements()
+            print("INSTALL REQUIREMENTS")
     else:
-
         venv_call = ["python","-m","venv",venv_path]
         venv_call = venv_call + args
 
-        subprocess.run(venv_call)
-
-
+        subprocess.run(venv_call)   
     
+        enter_venv(venv_path,get_running_file())
+        
+        print(get_running_file())
+
+
+
+def enter_venv(venv_path:str,py_file:str) -> None:
+    #INCOMPLETE FUNCTION, TESTING NOT FINISHED 
+        #Todo, execute this function from within a main file without recursive loop
+    subprocess.Popen([f"{venv_path}/bin/python", py_file])
